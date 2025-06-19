@@ -269,9 +269,6 @@ export default function Home() {
             >
               📱 Baixar APK
             </a>
-            <button className="border-2 border-blue-600 text-blue-600 px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold hover:bg-blue-50 transition">
-              ▶️ Ver Demo
-            </button>
           </motion.div>
 
           <div className="mt-6 space-y-2">
