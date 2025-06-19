@@ -5,11 +5,11 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Seus Lembretes - App 100% Offline',
+  title: 'Seus Lembretes', 
   description: 'O app de lembretes mais simples e eficaz...',
   icons: {
     icon: '/favicon.ico',
-    shortcut: '/favicon.ico',
+    shortcut: '/favicon.ico', 
     apple: '/favicon.ico',
   }
 }
