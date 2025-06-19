@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../lib/supabase'
 import useEmblaCarousel from 'embla-carousel-react'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 
 interface Review {
   id?: number
@@ -170,6 +171,14 @@ export default function Home() {
     if (emblaApi) emblaApi.scrollNext()
   }, [emblaApi])
 
+  const scrollReviewsPrev = useCallback(() => {
+    if (reviewsEmblaApi) reviewsEmblaApi.scrollPrev()
+  }, [reviewsEmblaApi])
+
+  const scrollReviewsNext = useCallback(() => {
+    if (reviewsEmblaApi) reviewsEmblaApi.scrollNext()
+  }, [reviewsEmblaApi])
+
   const scrollToSection = (id: string) => {
     setIsMenuOpen(false)
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
@@ -288,10 +297,12 @@ export default function Home() {
                   <div key={index} className="flex-[0_0_85%] sm:flex-[0_0_70%] md:flex-[0_0_45%] lg:flex-[0_0_32%] mr-4 sm:mr-6">
                     {/* Mockup limpo sem bordas */}
                     <div className="mx-auto max-w-[280px] sm:max-w-xs">
-                      <img 
+                      <Image 
                         src={screenshot}
                         alt={`${screenshotData[index]?.title || `Screenshot ${index + 1}`}`}
                         className="w-full h-auto object-contain drop-shadow-2xl"
+                        width={280}
+                        height={500}
                       />
                       
                       {/* Screenshot Description */}
@@ -493,7 +504,7 @@ export default function Home() {
                         </div>
                       </div>
                       <blockquote className="text-gray-700 leading-relaxed italic border-l-4 border-blue-200 pl-4">
-                        "{review.comment || 'Sem comentário'}"
+                        &ldquo;{review.comment || 'Sem comentário'}&rdquo;
                       </blockquote>
                       <div className="text-xs text-gray-500 mt-3 text-right">
                         {review.created_at ? new Date(review.created_at).toLocaleDateString('pt-BR') : 'Data não disponível'}
