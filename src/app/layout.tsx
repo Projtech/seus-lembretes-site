@@ -5,10 +5,14 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Seus Lembretes',
-  description: 'O app de lembretes mais simples e eficaz. Seus dados ficam só no seu celular, sem tracking, sem anúncios, sem complicação.',
+  title: 'Seus Lembretes - App 100% Offline',
+  description: 'O app de lembretes mais simples e eficaz...',
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/favicon.ico',
+  }
 }
-
 export default function RootLayout({
   children,
 }: {
