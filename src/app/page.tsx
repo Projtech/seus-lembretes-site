@@ -15,28 +15,30 @@ interface Review {
 }
 
 export default function Home() {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+  const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     skipSnaps: false,
     startIndex: 0,
     dragFree: true,
-    containScroll: 'trimSnaps'
+    containScroll: 'trimSnaps',
+    axis: 'x'  // ADICIONAR ESTA LINHA
   })
-  
+
   // Adicionar carrousel para reviews
-  const [reviewsEmblaRef, reviewsEmblaApi] = useEmblaCarousel({ 
+  const [reviewsEmblaRef, reviewsEmblaApi] = useEmblaCarousel({
     loop: true,
     skipSnaps: false,
     startIndex: 0,
     dragFree: true,
-    containScroll: 'trimSnaps'
+    containScroll: 'trimSnaps',
+    axis: 'x'  // ADICIONAR ESTA LINHA
   })
-  
+
   const [reviews, setReviews] = useState<Review[]>([])
-  const [newReview, setNewReview] = useState<Review>({ 
-    name: '', 
-    rating: 5, 
-    comment: '' 
+  const [newReview, setNewReview] = useState<Review>({
+    name: '',
+    rating: 5,
+    comment: ''
   })
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -44,7 +46,7 @@ export default function Home() {
   // Screenshots do app
   const screenshots = [
     '/screenshots/screenshot1.jpg',
-    '/screenshots/screenshot2.jpg', 
+    '/screenshots/screenshot2.jpg',
     '/screenshots/screenshot3.jpg',
     '/screenshots/screenshot4.jpg',
     '/screenshots/screenshot5.jpg'
@@ -57,7 +59,7 @@ export default function Home() {
       description: 'Design moderno e intuitivo'
     },
     {
-      title: 'Lista Organizada', 
+      title: 'Lista Organizada',
       description: 'Filtros por data e categorias'
     },
     {
@@ -120,10 +122,10 @@ export default function Home() {
         .select('*')
         .order('created_at', { ascending: false })
         .limit(10)
-      
+
       console.log('Data from supabase:', data)
       console.log('Error from supabase:', error)
-      
+
       if (data && !error) {
         setReviews(data)
       }
@@ -143,12 +145,12 @@ export default function Home() {
         comment: newReview.comment.trim(),
         created_at: new Date().toISOString()
       }
-      
+
       const { data, error } = await supabase
         .from('reviews')
         .insert([reviewData])
         .select()
-      
+
       if (!error && data) {
         setNewReview({ name: '', rating: 5, comment: '' })
         await loadReviews() // Recarregar reviews
@@ -196,7 +198,7 @@ export default function Home() {
               </div>
               <span className="text-lg sm:text-xl font-bold text-gray-900">Seus Lembretes</span>
             </div>
-            
+
             {/* Desktop Menu */}
             <nav className="hidden md:flex space-x-8">
               <button onClick={() => scrollToSection('funcionalidades')} className="text-gray-600 hover:text-blue-600 transition">Funcionalidades</button>
@@ -206,7 +208,7 @@ export default function Home() {
             </nav>
 
             {/* Mobile Menu Button */}
-            <button 
+            <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition"
             >
@@ -232,56 +234,56 @@ export default function Home() {
         </div>
       </header>
 
-{/* Hero Section */}
-<section className="pt-24 sm:pt-28 pb-12 sm:pb-16 px-4 text-center">
-  <div className="max-w-4xl mx-auto">
-    <motion.h1 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight"
-    >
-      Seus Lembretes
-      <span className="block text-blue-600">100% Offline</span>
-    </motion.h1>
-    
-    <motion.p 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.2 }}
-      className="text-base sm:text-lg lg:text-xl text-gray-600 mb-6 sm:mb-8 max-w-2xl mx-auto leading-relaxed"
-    >
-      O app de lembretes mais simples e eficaz. Seus dados ficam só no seu celular, 
-      sem tracking, sem anúncios, sem complicação.
-    </motion.p>
+      {/* Hero Section */}
+      <section className="pt-24 sm:pt-28 pb-12 sm:pb-16 px-4 text-center">
+        <div className="max-w-4xl mx-auto">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight"
+          >
+            Seus Lembretes
+            <span className="block text-blue-600">100% Offline</span>
+          </motion.h1>
 
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.4 }}
-      className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center max-w-md sm:max-w-none mx-auto"
-    >
-      <a 
-        href="/seus_lembretes.apk"
-        download="seus_lembretes.apk"
-        className="bg-blue-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold hover:bg-blue-700 transition transform hover:scale-105 inline-block text-center"
-      >
-        📱 Baixar APK
-      </a>
-      <button className="border-2 border-blue-600 text-blue-600 px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold hover:bg-blue-50 transition">
-        ▶️ Ver Demo
-      </button>
-    </motion.div>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-base sm:text-lg lg:text-xl text-gray-600 mb-6 sm:mb-8 max-w-2xl mx-auto leading-relaxed"
+          >
+            O app de lembretes mais simples e eficaz. Seus dados ficam só no seu celular,
+            sem tracking, sem anúncios, sem complicação.
+          </motion.p>
 
-    <div className="mt-6 space-y-2">
-      <p className="text-sm text-gray-600">
-        📱 <strong>Android 6.0+</strong> • 🔒 <strong>Sem permissões especiais</strong> • 💾 <strong>~28,0MB</strong>
-      </p>
-      <p className="text-xs text-gray-500">
-        Desenvolvido por @ProjTech • Versão 1.0.0
-      </p>
-    </div>
-  </div>
-</section>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center max-w-md sm:max-w-none mx-auto"
+          >
+            <a
+              href="/seus_lembretes.apk"
+              download="seus_lembretes.apk"
+              className="bg-blue-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold hover:bg-blue-700 transition transform hover:scale-105 inline-block text-center"
+            >
+              📱 Baixar APK
+            </a>
+            <button className="border-2 border-blue-600 text-blue-600 px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold hover:bg-blue-50 transition">
+              ▶️ Ver Demo
+            </button>
+          </motion.div>
+
+          <div className="mt-6 space-y-2">
+            <p className="text-sm text-gray-600">
+              📱 <strong>Android 6.0+</strong> • 🔒 <strong>Sem permissões especiais</strong> • 💾 <strong>~28,0MB</strong>
+            </p>
+            <p className="text-xs text-gray-500">
+              Desenvolvido por @ProjTech • Versão 1.0.0
+            </p>
+          </div>
+        </div>
+      </section>
 
       {/* Screenshots Carousel */}
       <section id="screenshots" className="py-12 sm:py-16 px-4 bg-white">
@@ -289,22 +291,22 @@ export default function Home() {
           <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-8 sm:mb-12">
             Veja o App em Ação
           </h2>
-          
+
           <div className="relative">
             <div className="overflow-hidden" ref={emblaRef}>
-              <div className="flex touch-pan-x">
+              <div className="flex">
                 {screenshots.map((screenshot, index) => (
                   <div key={index} className="flex-[0_0_85%] sm:flex-[0_0_70%] md:flex-[0_0_45%] lg:flex-[0_0_32%] mr-4 sm:mr-6">
                     {/* Mockup limpo sem bordas */}
                     <div className="mx-auto max-w-[280px] sm:max-w-xs">
-                      <Image 
+                      <Image
                         src={screenshot}
                         alt={`${screenshotData[index]?.title || `Screenshot ${index + 1}`}`}
                         className="w-full h-auto object-contain drop-shadow-2xl"
                         width={280}
                         height={500}
                       />
-                      
+
                       {/* Screenshot Description */}
                       <div className="text-center mt-4 sm:mt-6 px-2">
                         <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-1 sm:mb-2">
@@ -319,25 +321,25 @@ export default function Home() {
                 ))}
               </div>
             </div>
-            
-            <button 
+
+            <button
               onClick={scrollPrev}
               className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-white/90 backdrop-blur p-2 sm:p-3 rounded-full shadow-lg hover:bg-white transition z-10 text-lg sm:text-xl"
             >
               ←
             </button>
-            <button 
+            <button
               onClick={scrollNext}
               className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-white/90 backdrop-blur p-2 sm:p-3 rounded-full shadow-lg hover:bg-white transition z-10 text-lg sm:text-xl"
             >
               →
             </button>
           </div>
-          
+
           {/* Indicadores do carrousel */}
           <div className="flex justify-center mt-6 sm:mt-8 space-x-2">
             {screenshots.map((_, index) => (
-              <div 
+              <div
                 key={index}
                 className="w-2 h-2 bg-gray-300 rounded-full"
               />
@@ -352,7 +354,7 @@ export default function Home() {
           <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-8 sm:mb-12">
             Por que escolher o Seus Lembretes?
           </h2>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {features.map((feature, index) => (
               <motion.div
@@ -371,179 +373,178 @@ export default function Home() {
         </div>
       </section>
 
-{/* Reviews */}
-<section id="avaliacoes" className="py-12 sm:py-16 px-4 bg-white">
-  <div className="max-w-6xl mx-auto">
-    <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-8 sm:mb-12">
-      O que nossos usuários dizem
-    </h2>
+      {/* Reviews */}
+      <section id="avaliacoes" className="py-12 sm:py-16 px-4 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-8 sm:mb-12">
+            O que nossos usuários dizem
+          </h2>
 
-    {/* Review Form */}
-    <div className="bg-gray-50 border-2 border-gray-200 shadow-lg p-6 sm:p-8 rounded-2xl mb-8 sm:mb-12 max-w-2xl mx-auto">
-      <div className="text-center mb-6">
-        <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Deixe sua avaliação</h3>
-        <p className="text-gray-600">Compartilhe sua experiência com o Seus Lembretes</p>
-      </div>
-      
-      <form onSubmit={submitReview} className="space-y-6">
-        {/* Nome */}
-        <div>
-          <label className="block text-sm font-semibold text-gray-900 mb-2">
-            Seu nome *
-          </label>
-          <input
-            type="text"
-            placeholder="Digite seu nome aqui..."
-            value={newReview.name}
-            onChange={(e) => setNewReview({...newReview, name: e.target.value})}
-            className="w-full p-4 border-2 border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-base bg-white"
-            required
-          />
-        </div>
-
-        {/* Rating */}
-        <div>
-          <label className="block text-sm font-semibold text-gray-900 mb-3">
-            Sua avaliação *
-          </label>
-          <div className="flex items-center space-x-2 flex-wrap">
-            <span className="text-gray-700 font-medium">Nota:</span>
-            <div className="flex space-x-1">
-              {[1,2,3,4,5].map(star => (
-                <button
-                  key={star}
-                  type="button"
-                  onClick={() => setNewReview(prev => ({...prev, rating: star}))}
-                  className={`text-3xl transition-all duration-200 hover:scale-110 touch-manipulation ${
-                    star <= newReview.rating 
-                      ? 'text-yellow-400 drop-shadow-sm' 
-                      : 'text-gray-300 hover:text-yellow-200'
-                  }`}
-                >
-                  {star <= newReview.rating ? '★' : '☆'}
-                </button>
-              ))}
+          {/* Review Form */}
+          <div className="bg-gray-50 border-2 border-gray-200 shadow-lg p-6 sm:p-8 rounded-2xl mb-8 sm:mb-12 max-w-2xl mx-auto">
+            <div className="text-center mb-6">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Deixe sua avaliação</h3>
+              <p className="text-gray-600">Compartilhe sua experiência com o Seus Lembretes</p>
             </div>
-            <span className="text-sm text-gray-600 ml-3 font-medium">
-              ({newReview.rating}/5)
-              {newReview.rating === 1 && " - Ruim"}
-              {newReview.rating === 2 && " - Regular"}
-              {newReview.rating === 3 && " - Bom"}
-              {newReview.rating === 4 && " - Muito bom"}
-              {newReview.rating === 5 && " - Excelente"}
-            </span>
+
+            <form onSubmit={submitReview} className="space-y-6">
+              {/* Nome */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">
+                  Seu nome *
+                </label>
+                <input
+                  type="text"
+                  placeholder="Digite seu nome aqui..."
+                  value={newReview.name}
+                  onChange={(e) => setNewReview({ ...newReview, name: e.target.value })}
+                  className="w-full p-4 border-2 border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-base bg-white"
+                  required
+                />
+              </div>
+
+              {/* Rating */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-3">
+                  Sua avaliação *
+                </label>
+                <div className="flex items-center space-x-2 flex-wrap">
+                  <span className="text-gray-700 font-medium">Nota:</span>
+                  <div className="flex space-x-1">
+                    {[1, 2, 3, 4, 5].map(star => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setNewReview(prev => ({ ...prev, rating: star }))}
+                        className={`text-3xl transition-all duration-200 hover:scale-110 touch-manipulation ${star <= newReview.rating
+                          ? 'text-yellow-400 drop-shadow-sm'
+                          : 'text-gray-300 hover:text-yellow-200'
+                          }`}
+                      >
+                        {star <= newReview.rating ? '★' : '☆'}
+                      </button>
+                    ))}
+                  </div>
+                  <span className="text-sm text-gray-600 ml-3 font-medium">
+                    ({newReview.rating}/5)
+                    {newReview.rating === 1 && " - Ruim"}
+                    {newReview.rating === 2 && " - Regular"}
+                    {newReview.rating === 3 && " - Bom"}
+                    {newReview.rating === 4 && " - Muito bom"}
+                    {newReview.rating === 5 && " - Excelente"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Comentário */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">
+                  Seu comentário *
+                </label>
+                <textarea
+                  placeholder="Conte-nos o que achou do app..."
+                  value={newReview.comment}
+                  onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
+                  className="w-full p-4 border-2 border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-base bg-white resize-none min-h-[120px]"
+                  required
+                  maxLength={500}
+                />
+                <div className="text-right text-sm text-gray-500 mt-1">
+                  {newReview.comment.length}/500 caracteres
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded-xl transition-all text-base font-semibold shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98]"
+              >
+                ✨ Enviar Avaliação
+              </button>
+            </form>
           </div>
-        </div>
 
-        {/* Comentário */}
-        <div>
-          <label className="block text-sm font-semibold text-gray-900 mb-2">
-            Seu comentário *
-          </label>
-          <textarea
-            placeholder="Conte-nos o que achou do app..."
-            value={newReview.comment}
-            onChange={(e) => setNewReview({...newReview, comment: e.target.value})}
-            className="w-full p-4 border-2 border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-base bg-white resize-none min-h-[120px]"
-            required
-            maxLength={500}
-          />
-          <div className="text-right text-sm text-gray-500 mt-1">
-            {newReview.comment.length}/500 caracteres
-          </div>
-        </div>
+          {/* Reviews Carousel */}
+          <div className="mt-12">
+            {isLoading ? (
+              <div className="text-center py-12">
+                <div className="text-4xl mb-4">⏳</div>
+                <h3 className="text-xl font-bold text-gray-600 mb-2">Carregando avaliações...</h3>
+              </div>
+            ) : reviews && reviews.length > 0 ? (
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 text-center mb-8">
+                  Avaliações da comunidade ({reviews.length})
+                </h3>
 
-        <button 
-          type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded-xl transition-all text-base font-semibold shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98]"
-        >
-          ✨ Enviar Avaliação
-        </button>
-      </form>
-    </div>
-
-    {/* Reviews Carousel */}
-    <div className="mt-12">
-      {isLoading ? (
-        <div className="text-center py-12">
-          <div className="text-4xl mb-4">⏳</div>
-          <h3 className="text-xl font-bold text-gray-600 mb-2">Carregando avaliações...</h3>
-        </div>
-      ) : reviews && reviews.length > 0 ? (
-        <div>
-          <h3 className="text-xl font-bold text-gray-900 text-center mb-8">
-            Avaliações da comunidade ({reviews.length})
-          </h3>
-          
-          {/* Carousel Container */}
-          <div className="relative">
-            <div className="overflow-hidden" ref={reviewsEmblaRef}>
-              <div className="flex touch-pan-x">
-                {reviews.map((review, index) => (
-                  <div key={review.id || index} className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] px-3">
-                    <div className="bg-white border border-gray-200 p-6 rounded-2xl shadow-md hover:shadow-lg transition-all">
-                      <div className="flex items-center justify-between mb-4">
-                        <div>
-                          <span className="font-bold text-gray-900 text-lg">{review.name || 'Usuário'}</span>
-                          <div className="flex mt-1">
-                            {[1,2,3,4,5].map((star) => (
-                              <span key={star} className={`text-lg ${star <= (review.rating || 0) ? 'text-yellow-400' : 'text-gray-300'}`}>
-                                ★
-                              </span>
-                            ))}
+                {/* Carousel Container */}
+                <div className="relative">
+                  <div className="overflow-hidden" ref={reviewsEmblaRef}>
+                    <div className="flex touch-pan-x">
+                      {reviews.map((review, index) => (
+                        <div key={review.id || index} className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] px-3">
+                          <div className="bg-white border border-gray-200 p-6 rounded-2xl shadow-md hover:shadow-lg transition-all">
+                            <div className="flex items-center justify-between mb-4">
+                              <div>
+                                <span className="font-bold text-gray-900 text-lg">{review.name || 'Usuário'}</span>
+                                <div className="flex mt-1">
+                                  {[1, 2, 3, 4, 5].map((star) => (
+                                    <span key={star} className={`text-lg ${star <= (review.rating || 0) ? 'text-yellow-400' : 'text-gray-300'}`}>
+                                      ★
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
+                                  {review.rating === 5 && "Excelente"}
+                                  {review.rating === 4 && "Muito bom"}
+                                  {review.rating === 3 && "Bom"}
+                                  {review.rating === 2 && "Regular"}
+                                  {review.rating === 1 && "Ruim"}
+                                </div>
+                              </div>
+                            </div>
+                            <blockquote className="text-gray-700 leading-relaxed italic border-l-4 border-blue-200 pl-4">
+                              &ldquo;{review.comment || 'Sem comentário'}&rdquo;
+                            </blockquote>
+                            <div className="text-xs text-gray-500 mt-3 text-right">
+                              {review.created_at ? new Date(review.created_at).toLocaleDateString('pt-BR') : 'Data não disponível'}
+                            </div>
                           </div>
                         </div>
-                        <div className="text-right">
-                          <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
-                            {review.rating === 5 && "Excelente"}
-                            {review.rating === 4 && "Muito bom"}
-                            {review.rating === 3 && "Bom"}
-                            {review.rating === 2 && "Regular"}
-                            {review.rating === 1 && "Ruim"}
-                          </div>
-                        </div>
-                      </div>
-                      <blockquote className="text-gray-700 leading-relaxed italic border-l-4 border-blue-200 pl-4">
-                        &ldquo;{review.comment || 'Sem comentário'}&rdquo;
-                      </blockquote>
-                      <div className="text-xs text-gray-500 mt-3 text-right">
-                        {review.created_at ? new Date(review.created_at).toLocaleDateString('pt-BR') : 'Data não disponível'}
-                      </div>
+                      ))}
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
 
-            {/* Navigation Buttons */}
-            {reviews.length > 3 && (
-              <>
-                <button 
-                  onClick={scrollReviewsPrev}
-                  className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-white/90 backdrop-blur p-2 sm:p-3 rounded-full shadow-lg hover:bg-white transition z-10 text-lg sm:text-xl"
-                >
-                  ←
-                </button>
-                <button 
-                  onClick={scrollReviewsNext}
-                  className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-white/90 backdrop-blur p-2 sm:p-3 rounded-full shadow-lg hover:bg-white transition z-10 text-lg sm:text-xl"
-                >
-                  →
-                </button>
-              </>
+                  {/* Navigation Buttons */}
+                  {reviews.length > 3 && (
+                    <>
+                      <button
+                        onClick={scrollReviewsPrev}
+                        className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-white/90 backdrop-blur p-2 sm:p-3 rounded-full shadow-lg hover:bg-white transition z-10 text-lg sm:text-xl"
+                      >
+                        ←
+                      </button>
+                      <button
+                        onClick={scrollReviewsNext}
+                        className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-white/90 backdrop-blur p-2 sm:p-3 rounded-full shadow-lg hover:bg-white transition z-10 text-lg sm:text-xl"
+                      >
+                        →
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <div className="text-6xl mb-4">💭</div>
+                <h3 className="text-xl font-bold text-gray-600 mb-2">Ainda não há avaliações</h3>
+                <p className="text-gray-500">Seja o primeiro a avaliar o Seus Lembretes!</p>
+              </div>
             )}
           </div>
         </div>
-      ) : (
-        <div className="text-center py-12">
-          <div className="text-6xl mb-4">💭</div>
-          <h3 className="text-xl font-bold text-gray-600 mb-2">Ainda não há avaliações</h3>
-          <p className="text-gray-500">Seja o primeiro a avaliar o Seus Lembretes!</p>
-        </div>
-      )}
-    </div>
-  </div>
-</section>
+      </section>
       {/* Contact */}
       <section id="contato" className="py-12 sm:py-16 px-4 bg-gray-900 text-white">
         <div className="max-w-4xl mx-auto text-center">
@@ -554,7 +555,7 @@ export default function Home() {
               <p className="text-gray-300 mb-4 text-sm sm:text-base leading-relaxed">
                 Precisa de ajuda? Encontrou um bug? Entre em contato!
               </p>
-              <a 
+              <a
                 href="mailto:projtechgestaoetecnologia@gmail.com"
                 className="bg-blue-600 text-white px-5 sm:px-6 py-3 rounded-lg inline-block hover:bg-blue-700 transition text-sm sm:text-base"
               >
