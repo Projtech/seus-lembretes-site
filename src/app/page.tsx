@@ -514,6 +514,24 @@ export default function Home() {
                 ))}
               </div>
             </div>
+
+            {/* Navigation Buttons */}
+            {reviews.length > 3 && (
+              <>
+                <button 
+                  onClick={scrollReviewsPrev}
+                  className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-white/90 backdrop-blur p-2 sm:p-3 rounded-full shadow-lg hover:bg-white transition z-10 text-lg sm:text-xl"
+                >
+                  ←
+                </button>
+                <button 
+                  onClick={scrollReviewsNext}
+                  className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-white/90 backdrop-blur p-2 sm:p-3 rounded-full shadow-lg hover:bg-white transition z-10 text-lg sm:text-xl"
+                >
+                  →
+                </button>
+              </>
+            )}
           </div>
         </div>
       ) : (
