@@ -4,13 +4,14 @@ import WhatsNewSection from '../../../components/WhatsNewSection'
 import { getRelease } from '../../../data/releases'
 
 interface PageProps {
-  params: {
+  params: Promise<{
     version: string
-  }
+  }>
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const release = getRelease(params.version)
+  const { version } = await params
+  const release = getRelease(version)
   
   if (!release) {
     return {
@@ -35,8 +36,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-export default function NovidadesPage({ params }: PageProps) {
-  const release = getRelease(params.version)
+export default async function NovidadesPage({ params }: PageProps) {
+  const { version } = await params
+  const release = getRelease(version)
   
   if (!release) {
     notFound()
