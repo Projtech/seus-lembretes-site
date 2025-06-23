@@ -276,7 +276,7 @@ export default function Home() {
               📱 <strong>Android 6.0+</strong> • 🔒 <strong>Sem permissões especiais</strong> • 💾 <strong>~28,0MB</strong>
             </p>
             <p className="text-xs text-gray-500">
-              Desenvolvido por @ProjTech • Versão 1.0.0
+              Desenvolvido por @ProjTech • Versão 1.2.0
             </p>
           </div>
         </div>
