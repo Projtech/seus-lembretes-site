@@ -1,7 +1,23 @@
+
 'use client'
 
 import Link from 'next/link'
-import { Release, ReleaseFeature } from '../data/releases'
+
+// Definição dos tipos para Release e ReleaseFeature (embutidos aqui)
+interface ReleaseFeature {
+  icon: string;
+  title: string;
+  description: string;
+  category: "new" | "improved" | "fixed";
+}
+
+interface Release {
+  version: string;
+  title: string;
+  description: string;
+  releaseDate: string;
+  features: ReleaseFeature[];
+}
 
 interface WhatsNewSectionProps {
   release: Release
@@ -112,3 +128,4 @@ export default function WhatsNewSection({ release }: WhatsNewSectionProps) {
     </div>
   )
 }
+
