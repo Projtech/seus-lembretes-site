@@ -15,7 +15,7 @@ export interface Release {
 
 export const releases: Record<string, Release> = {
   'v1.2.0': {
-    version: '1.3.0',
+    version: '1.2.0',
     releaseDate: '2025-01-23',
     title: 'Sistema de Atualizações Inteligente',
     description: 'Novidades focadas em manter você sempre atualizado com as melhorias do app.',

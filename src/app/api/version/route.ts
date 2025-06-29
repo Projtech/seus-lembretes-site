@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   return NextResponse.json({
-    version: "1.3.0",
+    version: "1.2.0",
     buildNumber: "2",
     releaseDate: "2025-06-23",
     whatsNew: {

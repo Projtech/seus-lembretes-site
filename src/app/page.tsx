@@ -201,6 +201,7 @@ export default function Home() {
 
             {/* Desktop Menu */}
             <nav className="hidden md:flex space-x-8">
+              <button onClick={() => window.open('/novidades/v1.2.0', '_blank')} className="text-gray-600 hover:text-blue-600 transition">Novidades</button>
               <button onClick={() => scrollToSection('funcionalidades')} className="text-gray-600 hover:text-blue-600 transition">Funcionalidades</button>
               <button onClick={() => scrollToSection('screenshots')} className="text-gray-600 hover:text-blue-600 transition">Screenshots</button>
               <button onClick={() => scrollToSection('avaliacoes')} className="text-gray-600 hover:text-blue-600 transition">Avaliações</button>
@@ -224,6 +225,7 @@ export default function Home() {
           {isMenuOpen && (
             <div className="md:hidden border-t border-gray-200 py-3">
               <div className="flex flex-col space-y-3">
+                <button onClick={() => window.open('/novidades/v1.2.0', '_blank')} className="text-gray-600 hover:text-blue-600 transition text-left py-2">Novidades</button>
                 <button onClick={() => scrollToSection('funcionalidades')} className="text-gray-600 hover:text-blue-600 transition text-left py-2">Funcionalidades</button>
                 <button onClick={() => scrollToSection('screenshots')} className="text-gray-600 hover:text-blue-600 transition text-left py-2">Screenshots</button>
                 <button onClick={() => scrollToSection('avaliacoes')} className="text-gray-600 hover:text-blue-600 transition text-left py-2">Avaliações</button>
@@ -276,7 +278,7 @@ export default function Home() {
               📱 <strong>Android 6.0+</strong> • 🔒 <strong>Sem permissões especiais</strong> • 💾 <strong>~28,0MB</strong>
             </p>
             <p className="text-xs text-gray-500">
-              Desenvolvido por @ProjTech • Versão 1.0.0
+              Desenvolvido por @ProjTech • Versão 1.3.0
             </p>
           </div>
         </div>
