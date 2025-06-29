@@ -430,7 +430,7 @@ export default function Home() {
                               </span>
                             </div>
                             <p className="text-gray-700 mb-4 text-sm sm:text-base leading-relaxed italic">
-                              '{review.comment}'
+                              {review.comment}
                             </p>
                             <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500">
                               <span className="font-medium">{review.name}</span>
