@@ -5,7 +5,6 @@ import { supabase } from '../lib/supabase'
 import useEmblaCarousel from 'embla-carousel-react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import Link from 'next/link' // Importar Link
 
 interface Review {
   id?: number
@@ -22,16 +21,17 @@ export default function Home() {
     startIndex: 0,
     dragFree: true,
     containScroll: 'trimSnaps',
-    axis: 'x'
+    axis: 'x'  // ADICIONAR ESTA LINHA
   })
 
+  // Adicionar carrousel para reviews
   const [reviewsEmblaRef, reviewsEmblaApi] = useEmblaCarousel({
     loop: true,
     skipSnaps: false,
     startIndex: 0,
     dragFree: true,
     containScroll: 'trimSnaps',
-    axis: 'x'
+    axis: 'x'  // ADICIONAR ESTA LINHA
   })
 
   const [reviews, setReviews] = useState<Review[]>([])
@@ -43,6 +43,7 @@ export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
+  // Screenshots do app
   const screenshots = [
     '/screenshots/screenshot1.jpg',
     '/screenshots/screenshot2.jpg',
@@ -51,6 +52,7 @@ export default function Home() {
     '/screenshots/screenshot5.jpg'
   ]
 
+  // Dados dos screenshots para descrições
   const screenshotData = [
     {
       title: 'Interface Limpa',
@@ -107,26 +109,28 @@ export default function Home() {
     }
   ]
 
+  // Carregar avaliações do Supabase
   useEffect(() => {
-    fetchReviews()
+    loadReviews()
   }, [])
 
-  const fetchReviews = async () => {
+  const loadReviews = async () => {
     try {
       setIsLoading(true)
       const { data, error } = await supabase
         .from('reviews')
         .select('*')
         .order('created_at', { ascending: false })
+        .limit(10)
 
-      if (error) {
-        console.error('Erro ao buscar avaliações:', error)
-        return
+      console.log('Data from supabase:', data)
+      console.log('Error from supabase:', error)
+
+      if (data && !error) {
+        setReviews(data)
       }
-
-      setReviews(data || [])
     } catch (error) {
-      console.error('Erro geral ao buscar avaliações:', error)
+      console.log('Erro ao carregar avaliações:', error)
     } finally {
       setIsLoading(false)
     }
@@ -134,21 +138,22 @@ export default function Home() {
 
   const submitReview = async (e: React.FormEvent) => {
     e.preventDefault()
-
-    if (!newReview.name.trim() || !newReview.comment.trim()) {
-      alert('Por favor, preencha nome e comentário')
-      return
-    }
-
     try {
+      const reviewData = {
+        name: newReview.name.trim(),
+        rating: newReview.rating,
+        comment: newReview.comment.trim(),
+        created_at: new Date().toISOString()
+      }
+
       const { data, error } = await supabase
         .from('reviews')
-        .insert([newReview])
+        .insert([reviewData])
         .select()
 
       if (!error && data) {
-        setReviews([data[0], ...reviews])
         setNewReview({ name: '', rating: 5, comment: '' })
+        await loadReviews() // Recarregar reviews
         alert('Avaliação enviada com sucesso!')
       } else {
         console.error('Erro ao inserir:', error)
@@ -200,10 +205,6 @@ export default function Home() {
               <button onClick={() => scrollToSection('screenshots')} className="text-gray-600 hover:text-blue-600 transition">Screenshots</button>
               <button onClick={() => scrollToSection('avaliacoes')} className="text-gray-600 hover:text-blue-600 transition">Avaliações</button>
               <button onClick={() => scrollToSection('contato')} className="text-gray-600 hover:text-blue-600 transition">Contato</button>
-              <Link href="/novidades/v1.2.0" className="flex items-center space-x-1 text-gray-600 hover:text-blue-600 transition">
-                <span>🎉</span>
-                <span>O que há de novo</span>
-              </Link>
             </nav>
 
             {/* Mobile Menu Button */}
@@ -227,14 +228,6 @@ export default function Home() {
                 <button onClick={() => scrollToSection('screenshots')} className="text-gray-600 hover:text-blue-600 transition text-left py-2">Screenshots</button>
                 <button onClick={() => scrollToSection('avaliacoes')} className="text-gray-600 hover:text-blue-600 transition text-left py-2">Avaliações</button>
                 <button onClick={() => scrollToSection('contato')} className="text-gray-600 hover:text-blue-600 transition text-left py-2">Contato</button>
-                <Link
-                  href="/novidades/v1.2.0"
-                  className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition text-left py-2"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <span>🎉</span>
-                  <span>O que há de novo</span>
-                </Link>
               </div>
             </div>
           )}
@@ -267,101 +260,57 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+            className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center max-w-md sm:max-w-none mx-auto"
           >
             <a
               href="/seus_lembretes.apk"
-              className="bg-blue-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg text-base sm:text-lg font-semibold hover:bg-blue-700 transition inline-flex items-center space-x-2 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+              download="seus_lembretes.apk"
+              className="bg-blue-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold hover:bg-blue-700 transition transform hover:scale-105 inline-block text-center"
             >
-              <span>📱</span>
-              <span>Baixar APK (28MB)</span>
+              📱 Baixar APK
             </a>
           </motion.div>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-            className="text-xs sm:text-sm text-gray-500 mt-4"
-          >
-            Compatível com Android 5.0+ • Arquivo seguro e verificado
-          </motion.p>
-        </div>
-      </section>
-
-      {/* Features */}
-      <section id="funcionalidades" className="py-12 sm:py-16 px-4">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Por que escolher o Seus Lembretes?
-            </h2>
-            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-              Desenvolvido pensando na sua privacidade e simplicidade
+          <div className="mt-6 space-y-2">
+            <p className="text-sm text-gray-600">
+              📱 <strong>Android 6.0+</strong> • 🔒 <strong>Sem permissões especiais</strong> • 💾 <strong>~28,0MB</strong>
             </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-white p-6 sm:p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow"
-              >
-                <div className="text-3xl sm:text-4xl mb-4">{feature.icon}</div>
-                <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-3">{feature.title}</h3>
-                <p className="text-gray-600 text-sm sm:text-base leading-relaxed">{feature.description}</p>
-              </motion.div>
-            ))}
+            <p className="text-xs text-gray-500">
+              Desenvolvido por @ProjTech • Versão 1.0.0
+            </p>
           </div>
         </div>
       </section>
 
-      {/* Screenshots */}
-      <section id="screenshots" className="py-12 sm:py-16 px-4 bg-white/50">
+      {/* Screenshots Carousel */}
+      <section id="screenshots" className="py-12 sm:py-16 px-4 bg-white">
         <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Veja o app em ação
-            </h2>
-            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-              Interface moderna e intuitiva pensada para sua produtividade
-            </p>
-          </motion.div>
+          <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-8 sm:mb-12">
+            Veja o App em Ação
+          </h2>
 
           <div className="relative">
             <div className="overflow-hidden" ref={emblaRef}>
               <div className="flex">
                 {screenshots.map((screenshot, index) => (
-                  <div key={index} className="flex-[0_0_100%] min-w-0 sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] px-2 sm:px-4">
-                    <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
-                      <div className="relative aspect-[9/16] mb-4 overflow-hidden rounded-xl bg-gray-100">
-                        <Image
-                          src={screenshot}
-                          alt={`Screenshot ${index + 1} do app Seus Lembretes`}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                      <div className="text-center">
-                        <h3 className="font-bold text-gray-900 mb-2 text-sm sm:text-base">
-                          {screenshotData[index]?.title}
+                  <div key={index} className="flex-[0_0_85%] sm:flex-[0_0_70%] md:flex-[0_0_45%] lg:flex-[0_0_32%] mr-4 sm:mr-6">
+                    {/* Mockup limpo sem bordas */}
+                    <div className="mx-auto max-w-[280px] sm:max-w-xs">
+                      <Image
+                        src={screenshot}
+                        alt={`${screenshotData[index]?.title || `Screenshot ${index + 1}`}`}
+                        className="w-full h-auto object-contain drop-shadow-2xl"
+                        width={280}
+                        height={500}
+                      />
+
+                      {/* Screenshot Description */}
+                      <div className="text-center mt-4 sm:mt-6 px-2">
+                        <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-1 sm:mb-2">
+                          {screenshotData[index]?.title || `Tela ${index + 1}`}
                         </h3>
-                        <p className="text-gray-600 text-xs sm:text-sm">
-                          {screenshotData[index]?.description}
+                        <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                          {screenshotData[index]?.description || 'Seus Lembretes em ação'}
                         </p>
                       </div>
                     </div>
@@ -383,61 +332,180 @@ export default function Home() {
               →
             </button>
           </div>
+
+          {/* Indicadores do carrousel */}
+          <div className="flex justify-center mt-6 sm:mt-8 space-x-2">
+            {screenshots.map((_, index) => (
+              <div
+                key={index}
+                className="w-2 h-2 bg-gray-300 rounded-full"
+              />
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Reviews Section */}
-      <section id="avaliacoes" className="py-12 sm:py-16 px-4">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              O que nossos usuários dizem
-            </h2>
-            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-              Avaliações reais de pessoas que usam o Seus Lembretes
-            </p>
-          </motion.div>
+      {/* Features */}
+      <section id="funcionalidades" className="py-12 sm:py-16 px-4 bg-gray-50">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-8 sm:mb-12">
+            Por que escolher o Seus Lembretes?
+          </h2>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12">
-            <div>
-              {isLoading ? (
-                <div className="text-center py-12">
-                  <div className="text-4xl mb-4">⏳</div>
-                  <p className="text-gray-500">Carregando avaliações...</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {features.map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-white p-5 sm:p-6 rounded-xl shadow-sm hover:shadow-md transition"
+              >
+                <div className="text-2xl sm:text-3xl mb-3 sm:mb-4">{feature.icon}</div>
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">{feature.title}</h3>
+                <p className="text-sm sm:text-base text-gray-600 leading-relaxed">{feature.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Reviews */}
+      <section id="avaliacoes" className="py-12 sm:py-16 px-4 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-900 mb-8 sm:mb-12">
+            O que nossos usuários dizem
+          </h2>
+
+          {/* Review Form */}
+          <div className="bg-gray-50 border-2 border-gray-200 shadow-lg p-6 sm:p-8 rounded-2xl mb-8 sm:mb-12 max-w-2xl mx-auto">
+            <div className="text-center mb-6">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Deixe sua avaliação</h3>
+              <p className="text-gray-600">Compartilhe sua experiência com o Seus Lembretes</p>
+            </div>
+
+            <form onSubmit={submitReview} className="space-y-6">
+              {/* Nome */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">
+                  Seu nome *
+                </label>
+                <input
+                  type="text"
+                  placeholder="Digite seu nome aqui..."
+                  value={newReview.name}
+                  onChange={(e) => setNewReview({ ...newReview, name: e.target.value })}
+                  className="w-full p-4 border-2 border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-base bg-white"
+                  required
+                />
+              </div>
+
+              {/* Rating */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-3">
+                  Sua avaliação *
+                </label>
+                <div className="flex items-center space-x-2 flex-wrap">
+                  <span className="text-gray-700 font-medium">Nota:</span>
+                  <div className="flex space-x-1">
+                    {[1, 2, 3, 4, 5].map(star => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setNewReview(prev => ({ ...prev, rating: star }))}
+                        className={`text-3xl transition-all duration-200 hover:scale-110 touch-manipulation ${star <= newReview.rating
+                          ? 'text-yellow-400 drop-shadow-sm'
+                          : 'text-gray-300 hover:text-yellow-200'
+                          }`}
+                      >
+                        {star <= newReview.rating ? '★' : '☆'}
+                      </button>
+                    ))}
+                  </div>
+                  <span className="text-sm text-gray-600 ml-3 font-medium">
+                    ({newReview.rating}/5)
+                    {newReview.rating === 1 && " - Ruim"}
+                    {newReview.rating === 2 && " - Regular"}
+                    {newReview.rating === 3 && " - Bom"}
+                    {newReview.rating === 4 && " - Muito bom"}
+                    {newReview.rating === 5 && " - Excelente"}
+                  </span>
                 </div>
-              ) : reviews.length > 0 ? (
+              </div>
+
+              {/* Comentário */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-900 mb-2">
+                  Seu comentário *
+                </label>
+                <textarea
+                  placeholder="Conte-nos o que achou do app..."
+                  value={newReview.comment}
+                  onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
+                  className="w-full p-4 border-2 border-gray-300 rounded-xl text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-base bg-white resize-none min-h-[120px]"
+                  required
+                  maxLength={500}
+                />
+                <div className="text-right text-sm text-gray-500 mt-1">
+                  {newReview.comment.length}/500 caracteres
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded-xl transition-all text-base font-semibold shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98]"
+              >
+                ✨ Enviar Avaliação
+              </button>
+            </form>
+          </div>
+
+          {/* Reviews Carousel */}
+          <div className="mt-12">
+            {isLoading ? (
+              <div className="text-center py-12">
+                <div className="text-4xl mb-4">⏳</div>
+                <h3 className="text-xl font-bold text-gray-600 mb-2">Carregando avaliações...</h3>
+              </div>
+            ) : reviews && reviews.length > 0 ? (
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 text-center mb-8">
+                  Avaliações da comunidade ({reviews.length})
+                </h3>
+
+                {/* Carousel Container */}
                 <div className="relative">
                   <div className="overflow-hidden" ref={reviewsEmblaRef}>
-                    <div className="flex">
+                    <div className="flex touch-pan-x">
                       {reviews.map((review, index) => (
-                        <div key={index} className="flex-[0_0_100%] min-w-0 px-2">
-                          <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm">
-                            <div className="flex items-center mb-4">
-                              <div className="flex text-yellow-400 text-lg sm:text-xl">
-                                {[...Array(5)].map((_, i) => (
-                                  <span key={i}>
-                                    {i < review.rating ? '★' : '☆'}
-                                  </span>
-                                ))}
+                        <div key={review.id || index} className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] px-3">
+                          <div className="bg-white border border-gray-200 p-6 rounded-2xl shadow-md hover:shadow-lg transition-all">
+                            <div className="flex items-center justify-between mb-4">
+                              <div>
+                                <span className="font-bold text-gray-900 text-lg">{review.name || 'Usuário'}</span>
+                                <div className="flex mt-1">
+                                  {[1, 2, 3, 4, 5].map((star) => (
+                                    <span key={star} className={`text-lg ${star <= (review.rating || 0) ? 'text-yellow-400' : 'text-gray-300'}`}>
+                                      ★
+                                    </span>
+                                  ))}
+                                </div>
                               </div>
-                              <span className="ml-2 text-gray-600 text-sm sm:text-base">
-                                ({review.rating}/5)
-                              </span>
+                              <div className="text-right">
+                                <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
+                                  {review.rating === 5 && "Excelente"}
+                                  {review.rating === 4 && "Muito bom"}
+                                  {review.rating === 3 && "Bom"}
+                                  {review.rating === 2 && "Regular"}
+                                  {review.rating === 1 && "Ruim"}
+                                </div>
+                              </div>
                             </div>
-                            <p className="text-gray-700 mb-4 text-sm sm:text-base leading-relaxed italic">
-                              {review.comment}
-                            </p>
-                            <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500">
-                              <span className="font-medium">{review.name}</span>
-                              <span>
-                                {review.created_at ?
-                                  new Date(review.created_at).toLocaleDateString('pt-BR') : 'Data não disponível'}
-                              </span>
+                            <blockquote className="text-gray-700 leading-relaxed italic border-l-4 border-blue-200 pl-4">
+                              &ldquo;{review.comment || 'Sem comentário'}&rdquo;
+                            </blockquote>
+                            <div className="text-xs text-gray-500 mt-3 text-right">
+                              {review.created_at ? new Date(review.created_at).toLocaleDateString('pt-BR') : 'Data não disponível'}
                             </div>
                           </div>
                         </div>
@@ -445,6 +513,7 @@ export default function Home() {
                     </div>
                   </div>
 
+                  {/* Navigation Buttons */}
                   {reviews.length > 3 && (
                     <>
                       <button
@@ -462,82 +531,17 @@ export default function Home() {
                     </>
                   )}
                 </div>
-              ) : (
-                <div className="text-center py-12">
-                  <div className="text-6xl mb-4">💭</div>
-                  <h3 className="text-xl font-bold text-gray-600 mb-2">Ainda não há avaliações</h3>
-                  <p className="text-gray-500">Seja o primeiro a avaliar o Seus Lembretes!</p>
-                </div>
-              )}
-            </div>
-
-            <div>
-              <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm">
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6">Deixe sua avaliação</h3>
-                <form onSubmit={submitReview} className="space-y-4 sm:space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Seu nome
-                    </label>
-                    <input
-                      type="text"
-                      value={newReview.name}
-                      onChange={(e) => setNewReview({ ...newReview, name: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
-                      placeholder="Digite seu nome"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Avaliação
-                    </label>
-                    <div className="flex items-center space-x-1">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <button
-                          key={star}
-                          type="button"
-                          onClick={() => setNewReview({ ...newReview, rating: star })}
-                          className={`text-2xl sm:text-3xl transition-colors ${star <= newReview.rating ? 'text-yellow-400' : 'text-gray-300'}
-                            `}
-                        >
-                          ★
-                        </button>
-                      ))}
-                      <span className="ml-2 text-gray-600 text-sm sm:text-base">
-                        ({newReview.rating}/5)
-                      </span>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Comentário
-                    </label>
-                    <textarea
-                      value={newReview.comment}
-                      onChange={(e) => setNewReview({ ...newReview, comment: e.target.value })}
-                      rows={4}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
-                      placeholder="Conte-nos o que achou do app..."
-                      required
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition text-sm sm:text-base"
-                  >
-                    Enviar Avaliação
-                  </button>
-                </form>
               </div>
-            </div>
+            ) : (
+              <div className="text-center py-12">
+                <div className="text-6xl mb-4">💭</div>
+                <h3 className="text-xl font-bold text-gray-600 mb-2">Ainda não há avaliações</h3>
+                <p className="text-gray-500">Seja o primeiro a avaliar o Seus Lembretes!</p>
+              </div>
+            )}
           </div>
         </div>
       </section>
-
       {/* Contact */}
       <section id="contato" className="py-12 sm:py-16 px-4 bg-gray-900 text-white">
         <div className="max-w-4xl mx-auto text-center">
