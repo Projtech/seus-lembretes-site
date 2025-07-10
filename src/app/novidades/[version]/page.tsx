@@ -1,14 +1,16 @@
+
 'use client'
 
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getRelease } from '@/data/releases'
 
-interface NovidadesPageProps {
-  params: { version: string }
-}
+// A interface NovidadesPageProps não é mais necessária aqui, pois o Next.js já tipa os params
+// interface NovidadesPageProps {
+//   params: { version: string }
+// }
 
-export default function NovidadesPage({ params }: NovidadesPageProps) {
+export default function NovidadesPage({ params }: { params: { version: string } }) {
   const release = getRelease(params.version)
 
   if (!release) {
@@ -125,3 +127,4 @@ export default function NovidadesPage({ params }: NovidadesPageProps) {
     </div>
   )
 }
+
