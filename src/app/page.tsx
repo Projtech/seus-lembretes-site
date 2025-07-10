@@ -275,7 +275,7 @@ export default function Home() {
 
           <div className="mt-6 space-y-2">
             <p className="text-sm text-gray-600">
-              📱 <strong>Android 6.0+</strong> • 🔒 <strong>Sem permissões especiais</strong> • 💾 <strong>~28,8MB</strong>
+              📱 <strong>Android 6.0+</strong> • 🔒 <strong>Sem permissões especiais</strong> • 💾 <strong>~30,0MB</strong>
             </p>
             <p className="text-xs text-gray-500">
               Desenvolvido por @ProjTech • Versão 1.2.0+2
