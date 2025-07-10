@@ -47,7 +47,7 @@ export const releases: Record<string, Release> = {
       {
         icon: '🔒',
         title: 'Privacidade Garantida',
-        description: 'Adicionado função de pin de segurança, para autenticação do app!.',
+        description: 'Adicionado função de pin de segurança, para autenticação do app!',
         category: 'improved'
       },
     ]
