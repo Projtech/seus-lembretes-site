@@ -51,6 +51,26 @@ export const releases: Record<string, Release> = {
         category: 'improved'
       }
     ]
+  },
+  'v1.3.0': {
+    version: '1.3.0',
+    releaseDate: '2025-02-15',
+    title: 'Interface Renovada',
+    description: 'Nova interface mais moderna e intuitiva.',
+    features: [
+      {
+        icon: '🎨',
+        title: 'Design Atualizado',
+        description: 'Interface completamente renovada com cores e elementos modernos.',
+        category: 'improved'
+      },
+      {
+        icon: '⚡',
+        title: 'Performance Melhorada',
+        description: 'App 50% mais rápido para abrir e navegar entre telas.',
+        category: 'improved'
+      }
+    ]
   }
 };
 

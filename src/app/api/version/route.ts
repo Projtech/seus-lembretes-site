@@ -4,7 +4,7 @@ export async function GET() {
   return NextResponse.json({
     version: "1.2.0",
     buildNumber: "2",
-    releaseDate: "2025-06-23",
+    releaseDate: "2025-07-09",
     whatsNew: {
       title: "Versão 1.2.0 - Sistema de Atualizações!",
       items: [
