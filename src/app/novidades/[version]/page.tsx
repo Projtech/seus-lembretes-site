@@ -10,9 +10,9 @@ import { getRelease } from '@/data/releases'
 //   params: { version: string }
 // }
 
-export default function NovidadesPage({ params }: { params: { version: string } }) {
-  const release = getRelease(params.version)
-
+export default async function NovidadesPage({ params }: { params: Promise<{ version: string }> }) {
+  const resolvedParams = await params
+  const release = getRelease(resolvedParams.version)
   if (!release) {
     notFound()
   }
