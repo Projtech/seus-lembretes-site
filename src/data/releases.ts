@@ -47,9 +47,9 @@ export const releases: Record<string, Release> = {
       {
         icon: '🔒',
         title: 'Privacidade Garantida',
-        description: 'Todas as novidades mantêm o compromisso: seus dados continuam 100% offline e privados no seu celular.',
+        description: 'Adicionado função de pin de segurança, para autenticação do app!.',
         category: 'improved'
-      }
+      },
     ]
   },
   'v1.3.0': {
